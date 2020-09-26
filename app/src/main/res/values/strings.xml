@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">CabApp-Vendor</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="abc_gmail_com">abc@gmail.com</string>
+    <string name="driver">Driver</string>
+    <string name="cab">Cab</string>
+    <string name="invalid_password">Invalid Password</string>
+    <string name="time">Time</string>
+    <string name="date">Date</string>
+    <string name="user_phone">User Phone</string>
+    <string name="to">to</string>
+    <string name="from">From</string>
+    <string name="google_maps_key">AIzaSyBSiM3w4BDyIO7fGew0KZPK4wuf54sHKyw</string>
+</resources>
