@@ -3,7 +3,6 @@ package com.jb.dev.cabapp_vendor.activites;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -81,27 +80,23 @@ public class DriverMapActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mMap.setMyLocationEnabled(true);
-                MarkerOptions startMark = new MarkerOptions();
-                LatLng latLng = new LatLng(start_lat, start_long);
-                startMark.position(latLng);
-                startMark.title("PickUp Location");
-                startMark.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-                mMap.addMarker(startMark);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                MarkerOptions endMark = new MarkerOptions();
-                LatLng latLng1 = new LatLng(end_lat, end_long);
-                endMark.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                endMark.title("Drop Location");
-                endMark.position(latLng1);
-                mMap.addMarker(endMark);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng1));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-            }
-        } else {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
+            MarkerOptions startMark = new MarkerOptions();
+            LatLng latLng = new LatLng(start_lat, start_long);
+            startMark.position(latLng);
+            startMark.title("PickUp Location");
+            startMark.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            mMap.addMarker(startMark);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            MarkerOptions endMark = new MarkerOptions();
+            LatLng latLng1 = new LatLng(end_lat, end_long);
+            endMark.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            endMark.title("Drop Location");
+            endMark.position(latLng1);
+            mMap.addMarker(endMark);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng1));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
         }
 
     }

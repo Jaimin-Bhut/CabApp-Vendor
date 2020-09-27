@@ -3,6 +3,8 @@
     package="com.jb.dev.cabapp_vendor">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,8 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activites.DriverMapActivity" />
-        <activity android:name=".activites.VerifyUserActivity" />
+        <activity
+            android:name=".activites.DriverMapActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+        <activity
+            android:name=".activites.VerifyUserActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
             android:name=".activites.SplashActivity"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">

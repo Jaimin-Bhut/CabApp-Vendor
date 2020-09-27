@@ -44,6 +44,8 @@ import com.jb.dev.cabapp_vendor.adapter.BookingListAdapter;
 import com.jb.dev.cabapp_vendor.helper.Constants;
 import com.jb.dev.cabapp_vendor.model.BookingModel;
 
+import java.util.Objects;
+
 import static android.os.Build.VERSION_CODES;
 
 public class MainActivity extends AppCompatActivity {
@@ -125,10 +127,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            for (QueryDocumentSnapshot snapshot : Objects.requireNonNull(task.getResult())) {
                                 id = snapshot.getId();
                             }
-                            Log.e("ID", id);
                             DocumentReference documentReference = db.collection(Constants.CAB_COLLECTION_REFERENCE_KEY).document(id);
                             documentReference.update(Constants.CAB_STATUS_KEY, Constants.AVAILABLE);
                             documentReference.update(Constants.CAB_AREA_KEY, area)

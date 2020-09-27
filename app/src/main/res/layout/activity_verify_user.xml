@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -26,7 +24,7 @@
                 android:gravity="center"
                 android:text="Verify User"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/background_dark"
                 android:textStyle="bold" />
 
             <TextView
@@ -36,7 +34,7 @@
                 android:gravity="center"
                 android:text="Please send verification code we sent on your booking"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:textColor="@color/grey_10" />
+                android:textColor="@color/blue_grey_800" />
 
         </LinearLayout>
 
@@ -67,7 +65,7 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/background_dark"
                     android:textStyle="bold"
                     android:theme="@style/EditText.White" />
 
@@ -88,7 +86,7 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/background_dark"
                     android:textStyle="bold"
                     android:theme="@style/EditText.White" />
 
@@ -106,10 +104,9 @@
                     android:inputType="number"
                     android:maxLength="1"
                     android:maxLines="1"
-
                     android:singleLine="true"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/background_dark"
                     android:textStyle="bold"
                     android:theme="@style/EditText.White" />
 
@@ -129,7 +126,7 @@
                     android:singleLine="true"
                     android:imeOptions="actionDone"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/background_dark"
                     android:textStyle="bold"
                     android:theme="@style/EditText.White" />
 

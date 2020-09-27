@@ -17,6 +17,14 @@
         <item name="android:windowDisablePreview">true</item>
     </style>
 
+    <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -24,8 +32,8 @@
     </style>
 
     <style name="EditText.White" parent="@style/AppTheme">
-        <item name="colorControlActivated">@android:color/white</item>
-        <item name="colorControlHighlight">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/background_dark</item>
+        <item name="colorControlHighlight">@android:color/background_dark</item>
         <item name="colorControlNormal">@color/grey_10</item>
     </style>
 
