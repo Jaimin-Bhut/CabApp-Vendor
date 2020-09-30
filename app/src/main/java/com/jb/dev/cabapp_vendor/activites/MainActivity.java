@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,6 +81,17 @@ public class MainActivity extends AppCompatActivity {
                 if (location != null) {
                     area = mapsActivity.getAddress(location.getLatitude(), location.getLongitude(), getApplicationContext());
                     Log.e("Area", area);
+                } else {
+                    Snackbar snackbar = Snackbar.make(view, getString(R.string.please_turn_on_location), Snackbar.LENGTH_INDEFINITE)
+                            .setAction("TURN ON", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivity(intent);
+                                }
+                            });
+                    snackbar.setActionTextColor(Color.WHITE);
+                    snackbar.show();
                 }
             }
         });
@@ -121,31 +134,41 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position, String cabNumber) {
                 mId = documentSnapshot.getId();
-                Log.e("Mid", mId);
-                Query q = mCabRef.whereEqualTo(Constants.CAB_NUMBER_KEY, cabNumber);
-                q.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                final Query q = mCabRef.whereEqualTo(Constants.CAB_NUMBER_KEY, cabNumber);
+                final DocumentReference mReference = db.collection(Constants.BOOKING_COLLECTION_REFERENCE_KEY).document(mId);
+                mReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot snapshot : Objects.requireNonNull(task.getResult())) {
-                                id = snapshot.getId();
-                            }
-                            DocumentReference documentReference = db.collection(Constants.CAB_COLLECTION_REFERENCE_KEY).document(id);
-                            documentReference.update(Constants.CAB_STATUS_KEY, Constants.AVAILABLE);
-                            documentReference.update(Constants.CAB_AREA_KEY, area)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Snackbar.make(view, "Success", BaseTransientBottomBar.LENGTH_LONG).show();
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Object object = documentSnapshot.get(Constants.BOOKING_VERIFIED);
+                        if (object.toString().equalsIgnoreCase("true")) {
+                            q.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot snapshot : Objects.requireNonNull(task.getResult())) {
+                                            id = snapshot.getId();
                                         }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-
+                                        DocumentReference documentReference = db.collection(Constants.CAB_COLLECTION_REFERENCE_KEY).document(id);
+                                        documentReference.update(Constants.CAB_STATUS_KEY, Constants.AVAILABLE);
+                                        documentReference.update(Constants.CAB_AREA_KEY, area)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        mReference.update(Constants.BOOKING_COMPLETED, true);
+                                                        Snackbar.make(view, "Success", BaseTransientBottomBar.LENGTH_LONG).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
+                                    }
+                                }
+                            });
+                        } else {
+                            Snackbar.make(view, "First need to verify user", BaseTransientBottomBar.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -198,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean checkLocationPermission() {
+    public void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -214,9 +237,6 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         REQUEST_LOCATION_CODE);
             }
-            return false;
-        } else {
-            return true;
         }
     }
 

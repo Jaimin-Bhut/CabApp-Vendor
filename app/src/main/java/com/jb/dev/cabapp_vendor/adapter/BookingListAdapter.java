@@ -35,7 +35,7 @@ public class BookingListAdapter extends FirestoreRecyclerAdapter<BookingModel, B
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull final BookingListHolder holder, int position, @NonNull final BookingModel model) {
+    protected void onBindViewHolder(@NonNull final BookingListHolder holder, final int position, @NonNull final BookingModel model) {
         holder.textViewUserName.setText(model.getuser_name());
         holder.textViewPhone.setText(model.getUser_phone_number());
         holder.textViewDate.setText(model.getdate());
@@ -43,6 +43,22 @@ public class BookingListAdapter extends FirestoreRecyclerAdapter<BookingModel, B
         holder.textViewTo.setText(model.getDestination_location());
         holder.textViewFrom.setText(model.getCurrent_location());
         final String cabNumber = model.getcab_number();
+
+        if (model.isVerified()) {
+            holder.buttonVerify.setText("Verified");
+            holder.buttonVerify.setEnabled(false);
+        } else {
+            holder.buttonVerify.setText("Verify");
+            holder.buttonVerify.setEnabled(true);
+        }
+
+        if (model.isCompleted()) {
+            holder.buttonJourneyComplete.setText("Completed");
+            holder.buttonJourneyComplete.setEnabled(false);
+        } else {
+            holder.buttonJourneyComplete.setText("Complete journey");
+            holder.buttonJourneyComplete.setEnabled(true);
+        }
 
         final int finalPosition = position;
         holder.buttonJourneyComplete.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +77,7 @@ public class BookingListAdapter extends FirestoreRecyclerAdapter<BookingModel, B
                 Intent intent = new Intent(v.getContext(), VerifyUserActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("otp", model.getOtp());
+                bundle.putString("Id", getSnapshots().getSnapshot(position).getId());
                 intent.putExtras(bundle);
                 v.getContext().startActivity(intent);
             }
@@ -87,7 +104,7 @@ public class BookingListAdapter extends FirestoreRecyclerAdapter<BookingModel, B
         return new BookingListHolder(view);
     }
 
-    class BookingListHolder extends RecyclerView.ViewHolder {
+    static class BookingListHolder extends RecyclerView.ViewHolder {
         public TextView textViewUserName, textViewPhone, textViewDate, textViewTime, textViewFrom, textViewTo;
         Button buttonVerify, buttonJourneyComplete;
 

@@ -36,7 +36,9 @@
             android:name=".activites.LoginActivity"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge"
             android:windowSoftInputMode="stateHidden|adjustPan|adjustResize" />
-        <activity android:name=".activites.MainActivity" />
+        <activity
+            android:name=".activites.MainActivity"
+            android:label="Driver Dashboard" />
     </application>
 
 </manifest>

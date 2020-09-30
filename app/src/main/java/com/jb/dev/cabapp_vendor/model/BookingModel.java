@@ -23,6 +23,16 @@ public class BookingModel {
     private String current_location;
     private String destination_location;
     private int otp;
+
+    private boolean verified, completed;
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 //    private String DriverId;
 
     public BookingModel() {
@@ -138,4 +148,11 @@ public class BookingModel {
         return current_location;
     }
 
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
 }

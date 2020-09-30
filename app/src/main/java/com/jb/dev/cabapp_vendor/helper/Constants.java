@@ -49,4 +49,6 @@ public interface Constants {
     String BOOKING_CURRENT_LOCATION = "current_location";
     String BOOKING_DESTINATION_LOCATION = "destination_location";
     String BOOKING_OTP_KEY = "otp";
+    String BOOKING_VERIFIED = "verified";
+    String BOOKING_COMPLETED = "completed";
 }

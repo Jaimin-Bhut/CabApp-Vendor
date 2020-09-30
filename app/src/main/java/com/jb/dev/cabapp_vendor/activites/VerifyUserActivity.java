@@ -14,11 +14,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.jb.dev.cabapp_vendor.R;
+import com.jb.dev.cabapp_vendor.helper.Constants;
 
 public class VerifyUserActivity extends AppCompatActivity {
     int otp;
-    String main;
+    String main, id;
     EditText editTextOne, editTextTwo, editTextThree, editTextFour;
 
     @Override
@@ -28,6 +32,7 @@ public class VerifyUserActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         otp = b.getInt("otp");
+        id = b.getString("Id");
         editTextOne = findViewById(R.id.verify_et_one);
         editTextTwo = findViewById(R.id.verify_et_two);
         editTextThree = findViewById(R.id.verify_et_three);
@@ -105,11 +110,7 @@ public class VerifyUserActivity extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(editTextFour.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
                 if (editTextFour.getText().toString().length() == 1) {
                     main = editTextOne.getText().toString() + editTextTwo.getText().toString() + editTextThree.getText().toString() + editTextFour.getText().toString();
-                    if (main.equals(String.valueOf(otp))) {
-                        Toast.makeText(VerifyUserActivity.this, "VERIFY", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(VerifyUserActivity.this, "NOT VERIFY", Toast.LENGTH_LONG).show();
-                    }
+                    callForVerifyUser(main);
                 } else {
                     editTextThree.requestFocus();
                 }
@@ -127,15 +128,28 @@ public class VerifyUserActivity extends AppCompatActivity {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(editTextFour.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
                     main = editTextOne.getText().toString() + editTextTwo.getText().toString() + editTextThree.getText().toString() + editTextFour.getText().toString();
-                    if (main.equals(String.valueOf(otp))) {
-                        Toast.makeText(VerifyUserActivity.this, "VERIFY", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(VerifyUserActivity.this, "NOT VERIFY", Toast.LENGTH_LONG).show();
-                    }
+                    callForVerifyUser(main);
                 }
                 return false;
             }
         });
+    }
+
+    private void callForVerifyUser(String code) {
+        if (code.equals(String.valueOf(otp))) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference mReference = db.collection(Constants.BOOKING_COLLECTION_REFERENCE_KEY).document(id);
+            mReference.update(Constants.BOOKING_VERIFIED, true).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(VerifyUserActivity.this, "VERIFIED", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            });
+        } else {
+            Toast.makeText(VerifyUserActivity.this, "NOT VERIFY", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     @Override
