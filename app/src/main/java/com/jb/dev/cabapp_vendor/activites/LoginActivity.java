@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.jb.dev.cabapp_vendor.R;
 import com.jb.dev.cabapp_vendor.helper.Constants;
+import com.jb.dev.cabapp_vendor.helper.Helper;
 
 public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
@@ -54,6 +55,9 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword.setText("23456234");
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        if (!Helper.isNetworkAvailable(this)) {
+            Helper.showSnackBar(parent_view, R.string.please_turn_on_internet, this);
+        }
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,5 +119,4 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("setDriverEmail", driver_email);
         editor.apply();
     }
-
 }

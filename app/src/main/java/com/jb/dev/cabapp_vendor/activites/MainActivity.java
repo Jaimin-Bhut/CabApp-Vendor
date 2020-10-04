@@ -5,11 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +42,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.jb.dev.cabapp_vendor.R;
 import com.jb.dev.cabapp_vendor.adapter.BookingListAdapter;
 import com.jb.dev.cabapp_vendor.helper.Constants;
+import com.jb.dev.cabapp_vendor.helper.Helper;
 import com.jb.dev.cabapp_vendor.model.BookingModel;
 
 import java.util.Objects;
@@ -75,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
         mapsActivity = new MapsActivity();
         client = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
+        if (!Helper.isNetworkAvailable(MainActivity.this)) {
+            Helper.showSnackBar(view, R.string.please_turn_on_internet, this);
+        }
         client.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -82,16 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     area = mapsActivity.getAddress(location.getLatitude(), location.getLongitude(), getApplicationContext());
                     Log.e("Area", area);
                 } else {
-                    Snackbar snackbar = Snackbar.make(view, getString(R.string.please_turn_on_location), Snackbar.LENGTH_INDEFINITE)
-                            .setAction("TURN ON", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                    startActivity(intent);
-                                }
-                            });
-                    snackbar.setActionTextColor(Color.WHITE);
-                    snackbar.show();
+                    Helper.showSnackBar(view, R.string.please_turn_on_location, MainActivity.this);
                 }
             }
         });
