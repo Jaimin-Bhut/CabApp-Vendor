@@ -90,21 +90,26 @@ public class LoginActivity extends AppCompatActivity {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String p = document.getString(Constants.DRIVER_PASSWORD_KEY);
-                                if (p.equals(password)) {
-                                    Log.e("addOnCompleteListener::", "success");
-                                    progressBar.setVisibility(View.GONE);
-                                    setIsDriverLogin(getApplicationContext(), true, email);
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                    finish();
-                                } else {
-                                    Log.e("addOnCompleteListener::", "Fail");
-                                    progressBar.setVisibility(View.GONE);
-                                    Snackbar.make(parent_view, getString(R.string.invalid_password), Snackbar.LENGTH_SHORT).show();
+                        if (!task.getResult().isEmpty()) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String p = document.getString(Constants.DRIVER_PASSWORD_KEY);
+                                    if (p.equals(password)) {
+                                        Log.e("addOnCompleteListener::", "success");
+                                        progressBar.setVisibility(View.GONE);
+                                        setIsDriverLogin(getApplicationContext(), true, email);
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                        finish();
+                                    } else {
+                                        Log.e("addOnCompleteListener::", "Fail");
+                                        progressBar.setVisibility(View.GONE);
+                                        Snackbar.make(parent_view, getString(R.string.invalid_password), Snackbar.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
+                        } else {
+                            Snackbar.make(parent_view, "Driver not exist", Snackbar.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
                     }
                 });

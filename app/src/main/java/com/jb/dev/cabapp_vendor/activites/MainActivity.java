@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -63,12 +65,16 @@ public class MainActivity extends AppCompatActivity {
     CollectionReference mCabRef;
     private FusedLocationProviderClient client;
     private static final int REQUEST_LOCATION_CODE = 99;
+    private TextView textViewNoData;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        textViewNoData = findViewById(R.id.txt_no_data);
+        progressBar = findViewById(R.id.progress_circular);
         view = findViewById(android.R.id.content);
         mCabRef = db.collection(Constants.CAB_COLLECTION_REFERENCE_KEY);
         mapsActivity = new MapsActivity();
@@ -108,11 +114,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void init() {
+        progressBar.setVisibility(View.VISIBLE);
         driverEmail = getDriverEmail(this);
         Log.e("init::", driverEmail);
         recyclerViewBooking = findViewById(R.id.driver_dashboard_booking_recycler_view);
 
         query = bookingRef.whereEqualTo(Constants.BOOKING_CAB_DRIVER_KEY, driverEmail);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.getResult().isEmpty()) {
+                    textViewNoData.setVisibility(View.VISIBLE);
+                } else {
+                    textViewNoData.setVisibility(View.INVISIBLE);
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+        });
         FirestoreRecyclerOptions<BookingModel> options = new FirestoreRecyclerOptions.Builder<BookingModel>()
                 .setQuery(query, BookingModel.class)
                 .build();
